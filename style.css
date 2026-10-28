@@ -1,0 +1,141 @@
+:root {
+  --sky: #2f7fd1;
+  --ink: #ffffff;
+  --soft: rgba(255, 255, 255, 0.78);
+  --veil: rgba(255, 255, 255, 0.12);
+  --line: rgba(255, 255, 255, 0.22);
+  --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+/* The whole page takes the color of the sky outside. */
+body[data-sky="day"]       { --sky: #2f7fd1; }
+body[data-sky="night"]     { --sky: #16223f; }
+body[data-sky="cloudy"]    { --sky: #5b6b7a; }
+body[data-sky="overcast"]  { --sky: #2d3643; }
+body[data-sky="rain"]      { --sky: #3b5068; }
+body[data-sky="storm"]     { --sky: #2c2745; }
+body[data-sky="snow"]      { --sky: #55728a; }
+body[data-sky="fog"]       { --sky: #66727c; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--sky);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.45;
+  transition: background-color 0.9s ease;
+}
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: max(1.25rem, env(safe-area-inset-top)) 1.25rem max(1.25rem, env(safe-area-inset-bottom));
+}
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+/* Top bar */
+.top { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: space-between; }
+.search { position: relative; display: flex; gap: 0.5rem; flex: 1 1 340px; max-width: 520px; }
+.search input {
+  flex: 1; min-width: 0;
+  font: inherit; color: var(--ink);
+  background: var(--veil);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.7rem 1.1rem;
+}
+.search input::placeholder { color: var(--soft); }
+.tools { display: flex; gap: 0.5rem; }
+.btn {
+  font: inherit; font-weight: 600; color: var(--ink);
+  background: var(--veil);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.7rem 1.1rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:hover { background: rgba(255, 255, 255, 0.2); }
+.btn-solid { background: #fff; color: #14253a; border-color: #fff; }
+.btn-solid:hover { background: #eaf2fb; }
+
+.suggestions {
+  position: absolute; top: calc(100% + 0.4rem); left: 0; right: 0; z-index: 5;
+  margin: 0; padding: 0.35rem; list-style: none;
+  background: rgba(14, 22, 34, 0.97);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+.suggestions li { padding: 0.6rem 0.8rem; border-radius: 10px; cursor: pointer; }
+.suggestions li small { color: rgba(255, 255, 255, 0.7); }
+.suggestions li[aria-selected="true"], .suggestions li:hover { background: rgba(255, 255, 255, 0.14); }
+
+.status { margin: 2rem 0 0; font-size: 1.15rem; }
+.status:empty { display: none; }
+.status.error { background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: 14px; }
+
+/* Layout */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem; margin-top: 2.2rem; }
+@media (min-width: 880px) {
+  .layout { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 3rem; align-items: start; margin-top: 3rem; }
+}
+.layout[hidden], .suggestions[hidden] { display: none; }
+
+/* Current conditions: the temperature is the star of the page */
+.place { margin: 0; font-size: clamp(1.5rem, 4vw, 2.1rem); font-weight: 600; letter-spacing: -0.01em; }
+.condition { margin: 0.2rem 0 0; font-size: 1.25rem; color: var(--soft); }
+.temp {
+  margin: 0.4rem 0 0.8rem;
+  font-size: clamp(6.5rem, 24vw, 14rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-variation-settings: "opsz" 96;
+}
+.temp .sym { font-size: 0.34em; vertical-align: 0.9em; letter-spacing: 0; font-weight: 600; margin-left: 0.04em; }
+.details { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem 1.5rem; margin: 0; max-width: 520px; }
+.details div { border-top: 1px solid var(--line); padding-top: 0.55rem; }
+.details dt { color: var(--soft); font-size: 0.95rem; }
+.details dd { margin: 0; font-size: 1.3rem; font-weight: 600; }
+
+/* Forecast panel */
+.forecast { min-width: 0; background: var(--veil); border-radius: 28px; padding: 1.4rem 1.4rem 0.6rem; }
+.forecast h2 { margin: 0 0 0.8rem; font-size: 1.05rem; font-weight: 600; color: var(--soft); }
+.forecast section + section { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+
+.hourly { position: relative; display: flex; gap: 0.25rem; margin: 0; padding: 0 0 0.9rem; list-style: none; overflow-x: auto; scrollbar-width: thin; }
+.hourly li { flex: 0 0 auto; min-width: 4rem; text-align: center; padding: 0.4rem 0.3rem; }
+.hourly li:first-child { background: rgba(255, 255, 255, 0.16); border-radius: 14px; }
+.hourly .h-time { display: block; color: var(--soft); font-size: 0.9rem; }
+.hourly .h-icon { display: block; font-size: 1.6rem; margin: 0.15rem 0; }
+.hourly .h-temp { display: block; font-weight: 600; }
+
+.daily { margin: 0; padding: 0; list-style: none; }
+.daily li {
+  display: grid;
+  grid-template-columns: 3.4rem 1.8rem 2.6rem 2.2rem minmax(40px, 1fr) 2.2rem;
+  align-items: center; gap: 0.6rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.daily li:last-child { border-bottom: 0; }
+.daily .d-name { font-weight: 600; }
+.daily .d-icon { font-size: 1.4rem; text-align: center; }
+.daily .d-rain { font-size: 0.85rem; color: var(--soft); }
+.daily .d-lo { color: var(--soft); text-align: right; }
+.daily .d-hi { text-align: right; font-weight: 600; }
+.range { position: relative; height: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.2); }
+.range i { position: absolute; top: 0; bottom: 0; border-radius: 6px; background: #fff; }
+
+.foot { margin-top: 3rem; color: var(--soft); font-size: 0.9rem; }
+.foot a { color: inherit; }
+
+@media (max-width: 480px) {
+  .tools { width: 100%; }
+  .tools .btn { flex: 1; }
+  .daily li { gap: 0.4rem; grid-template-columns: 3.3rem 1.6rem 2.4rem 2rem minmax(30px, 1fr) 2rem; }
+}
+@media (prefers-reduced-motion: reduce) { body { transition: none; } }

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Weather Pro Ultra</title>
+  <meta name="description" content="Live weather for any city: current conditions, the next 24 hours and a 7-day forecast.">
+  <meta name="theme-color" content="#2f7fd1" id="theme-color">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-sky="day">
+  <div class="page">
+    <header class="top">
+      <form id="search" class="search" role="search" autocomplete="off">
+        <label for="q" class="sr">Search for a city</label>
+        <input id="q" type="text" placeholder="Search for a city" role="combobox" aria-expanded="false" aria-controls="suggestions" aria-autocomplete="list" enterkeyhint="search">
+        <button type="submit" class="btn btn-solid">Search</button>
+        <ul id="suggestions" class="suggestions" role="listbox" hidden></ul>
+      </form>
+      <div class="tools">
+        <button type="button" id="locate" class="btn">Use my location</button>
+        <button type="button" id="unit" class="btn" aria-label="Switch temperature unit">°C</button>
+      </div>
+    </header>
+
+    <p id="status" class="status" role="status" aria-live="polite">Loading the weather…</p>
+
+    <main id="app" class="layout" hidden>
+      <section class="now" aria-labelledby="place">
+        <h1 id="place" class="place"></h1>
+        <p id="condition" class="condition"></p>
+        <p id="temp" class="temp"></p>
+        <dl id="details" class="details"></dl>
+      </section>
+
+      <div class="forecast">
+        <section aria-labelledby="hourly-h">
+          <h2 id="hourly-h">Next 24 hours</h2>
+          <ol id="hourly" class="hourly" tabindex="0" aria-label="Hourly forecast, scrolls sideways"></ol>
+        </section>
+        <section aria-labelledby="daily-h">
+          <h2 id="daily-h">7-day forecast</h2>
+          <ol id="daily" class="daily"></ol>
+        </section>
+      </div>
+    </main>
+
+    <footer class="foot">
+      Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>
+    </footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
